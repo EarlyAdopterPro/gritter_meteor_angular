@@ -12,12 +12,17 @@ if (Meteor.isClient) {
       }); 
       
       $scope.addTask = function (newTask, taskImportant){
-       $scope.tasks.push({
-          text: newTask,
-          createdAt: new Date(),
-          important: taskImportant
-        });
+        $meteor.call('addTask', newTask, taskImportant); 
       };
+
+      $scope.deleteTask = function (task) {
+        $meteor.call('deleteTask', task._id);
+      }
+
+      $scope.setChecked = function (task) {
+        $meteor.call('setChecked', task._id, !task.checked); 
+      }
+
 
       $scope.$watch('hideCompleted', function(){
         if ($scope.hideCompleted)
@@ -32,4 +37,28 @@ if (Meteor.isClient) {
 
     }]);
 }
+
+Meteor.methods ({
+  addTask: function (text, important) {
+    // Make sure the user is looged in before inserting a task  
+    if (!Meteor.userId()){
+      throw new Meteor.Error('non-authorized');
+    }
+
+    Tasks.insert({
+      text:text,
+      important:important,
+      createdAt:new Date(),
+      owner: Meteor.userId()
+    });
+  },
+
+  deleteTask: function(taskId){
+   Tasks.remove(taskId);
+  },
+
+  setChecked: function (taskId, setChecked){
+    Tasks.update(taskId, { $set: {checked: setChecked}}); 
+  }
+})
 
