@@ -8,6 +8,7 @@ if (Meteor.isClient) {
  angular.module('simple-todos').controller('TodosListCtrl', ['$scope','$meteor',
     function ($scope, $meteor) {
 
+      // Subscribe to tah tasks
       $scope.$meteorSubscribe('tasks');
 
       $scope.tasks = $meteor.collection(function(){
@@ -40,6 +41,12 @@ if (Meteor.isClient) {
       $scope.incompleteCount = function () {
         return Tasks.find ({checked: {$ne:true} }).count();
       };
+      
+      // Subscribe to all Users
+      $scope.$meteorSubscribe('grittrAllUsers');
+      $scope.grittrAllUsers = $meteor.collection(function(){
+        return Meteor.users.find();
+      });
 
     }]);
 }
@@ -90,6 +97,11 @@ if (Meteor.isServer) {
           { owner: this.userId}
         ]
       });
+  });
+
+  // Publish all Users
+  Meteor.publish('grittrAllUsers', function (){
+    return Meteor.users.find(); 
   });
 }
 

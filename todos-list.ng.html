@@ -6,7 +6,7 @@
       Hide Completed Tasks
     </label>
 
-<meteor-include src="loginButtons"></meteor-include>
+    <meteor-include src="loginButtons"></meteor-include>
 
     <form class="new-task" ng-submit="addTask(newTask, taskImportant); 
                                       newTask=''; taskImportant=false"
@@ -19,15 +19,20 @@
   </header>
 
   <ul ng-repeat="task in tasks">
-        <li ng-class="{'checked':task.checked, 'private':task.private}">
-          <button class="delete" ng-click="deleteTask(task)">&times;</button>
-          <input type="checkbox" ng-checked="task.checked"
-                  ng-click="setChecked(task)" class="toggle-cheched" />
-          <button class="toggle-private"
-                  ng-if="task.owner === $root.currentUser._id"
-                  ng-click="setPrivate(task)">
-            {{task.private == true ? "Private" : "Public" }}
-          </button>
-          <span class="text" ng-class="{'important':task.important}">{{task.text}} </span></li> 
+    <li ng-class="{'checked':task.checked, 'private':task.private}">
+      <button class="delete" ng-click="deleteTask(task)">&times;</button>
+      <input type="checkbox" ng-checked="task.checked"
+             ng-click="setChecked(task)" class="toggle-cheched" />
+      <button class="toggle-private"
+             ng-if="task.owner === $root.currentUser._id"
+             ng-click="setPrivate(task)">
+         {{task.private == true ? "Private" : "Public" }}
+      </button>
+      <span class="text" ng-class="{'important':task.important}">{{task.text}} </span></li> 
+  </ul>
+
+  <ul ng-repeat="user in grittrAllUsers">
+    <li>ID: {{user._id}}</li>
+    <li>email: {{user.emails[0].address}}</li>
   </ul>
 </div>
