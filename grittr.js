@@ -21,8 +21,9 @@ if (Meteor.isClient) {
 
     // Initialize data for the form
       $scope.newTask='';
-      $scope.taskImportant=false;
-      $scope.taskUrgent=false;
+      $scope.taskImportant = false;
+      $scope.taskUrgent = false;
+      $scope.show = false;
 
     // Subscribe to the tasks
       $scope.$meteorSubscribe('tasks');

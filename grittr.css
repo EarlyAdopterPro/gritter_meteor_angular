@@ -5,26 +5,27 @@
   width: 100%;
 }
 
-.row {
+.grittr-row {
   margin-bottom: 10px;
+}
+
+.grittr-padding {
+  padding-right:0px;
 }
 
 #login-buttons {
   display: block;
+  margin-bottom: 5px;
+  margin-top: 10px;
 }
 
 h1 {
   font-size: 1.5em;
   margin: 0;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
   display: inline-block;
   margin-right: 1em;
-}
-
-ul {
-  margin: 0;
-  padding: 0;
-  background: white;
 }
 
 .delete {
@@ -33,52 +34,67 @@ ul {
   background: none;
   font-size: 1em;
   border: none;
-  position: relative;
+  padding:0;
+
 }
 
-li {
-  position: relative;
-  list-style: none;
-  padding: 15px;
-  border-bottom: #eee solid 1px;
+.grittr-li {
+  padding-left: 10px;
+  padding-right: 0px;
+  border-top: #ddd solid 1px;
+  border-left: #bbb solid 3px;
+  background: #eee;
 }
 
+.grittr-checkbox {
+  width: 10px;
+  padding-left: 0px;
+  padding-right: 5px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
 
 .important{
   font-weight: bold;
-  border-left: 2px solid #696969;
+  border-left: 3px solid #444;
 }
 
 .urgent{
   color: #E03C31;
-  border-left: 2px solid #E03C31;
+  border-left: 3px solid #E03C31;
 }
 
-li .text {
-  margin-left: 10px;
-}
-
-li .checked {
+.checked {
   color: #888;
 }
 
-li.checked .text {
+.text {
+  padding-left: 10px;
+  padding-right: 0px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.checked .text {
   text-decoration: line-through;
 }
 
-li.private {
-  background: #eee;
+.grittr-li .private {
   border-bottom-color: #ddd;
 }
-
 
 .toggle-private {
   margin-left: 5px;
 }
 
+.rolldown {
+  background: #f6f6f6;
+  padding-right:5px;
+  padding-left:10px;
+  border:0;
+}
 
 @media (max-width: @screen-xs) {
-    body{font-size: 24px;}
+    body{font-size: 14px;}
 }
 
 @media (max-width: @screen-sm) {
