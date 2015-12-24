@@ -43,11 +43,22 @@ li {
   border-bottom: #eee solid 1px;
 }
 
+
+.important{
+  font-weight: bold;
+  border-left: 2px solid #696969;
+}
+
+.urgent{
+  color: #E03C31;
+  border-left: 2px solid #E03C31;
+}
+
 li .text {
   margin-left: 10px;
 }
 
-li.checked {
+li .checked {
   color: #888;
 }
 
@@ -57,16 +68,14 @@ li.checked .text {
 
 li.private {
   background: #eee;
-  border-color: #ddd;
+  border-bottom-color: #ddd;
 }
+
 
 .toggle-private {
   margin-left: 5px;
 }
 
-.important{
-  font-weight:bold;
-}
 
 @media (max-width: @screen-xs) {
     body{font-size: 24px;}

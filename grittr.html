@@ -7,7 +7,7 @@
   <div ng-controller="TodosListCtrl" class="grittr-container container">
     <div class="row">
       <div class="col-md-6">
-        <h1> NEW Grittr list ({{incompleteCount()}}) </h1>
+        <h1> Grittr list ({{incompleteCount()}}) </h1>
       </div>
       <div class="col-md-6">
   <login-buttons></login-buttons>
@@ -16,12 +16,11 @@
      <div class="row">
        <div class="col-md-12">
          <!-- TODO: resolve duplication of addTask function call, see button -->
-         <form ng-submit="addTask(newTask, taskImportant);
-                            newTask=''; taskImportant=false;"> 
+         <form ng-submit="addTask(newTask, taskImportant, taskUrgent);
+                            newTask=''; taskImportant=false; taskUrgent=false;"> 
          <div class="input-group btn-group" >
 
-            <input type="text" class="form-control" placeholder="new task" 
-                ng-model="newTask"/>
+            <input type="text" class="form-control" ng-class="{'important':taskImportant, 'urgent':taskUrgent}" placeholder="new task" ng-model="newTask"/>
                <span class="input-group-btn">
                   <label class="btn btn-default" ng-model="taskUrgent" 
                           btn-checkbox><span class="glyphicon glyphicon-fire"></span></label>
@@ -39,11 +38,11 @@
     <div class="row">
       <div class="col-md-12">
         <ul ng-repeat="task in tasks">
-          <li ng-class="{'checked':task.checked, 'private':task.private}">
+          <li ng-class="{'checked':task.checked, 'private':task.private, 'important':task.important, 'urgent':task.urgent}">
             <button class="delete" ng-click="deleteTask(task)">&times;</button>
             <input type="checkbox" ng-checked="task.checked"
                    ng-click="setChecked(task)" class="toggle-cheched" />
-            <span class="text" ng-class="{'important':task.important}">{{task.text}} </span>
+            <span class="text" >{{task.text}} </span>
           </li> 
         </ul>
       </div> <!-- /col-md-12-->

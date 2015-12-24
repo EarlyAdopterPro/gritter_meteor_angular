@@ -2,52 +2,38 @@ Tasks = new Mongo.Collection('tasks');
 
 if (Meteor.isClient) {
 
- // This code only runs on the client
- angular.module('simple-todos',['angular-meteor','accounts.ui','ui.bootstrap']);
+  // This code only runs on the client
+  angular.module('simple-todos',['angular-meteor','accounts.ui','ui.bootstrap']);
 
   function onReady() {
       angular.bootstrap(document, ['simple-todos']);
   }
-         
- if (Meteor.isCordova)
+
+  // this is required for mobile app compilation
+  if (Meteor.isCordova)
      angular.element(document).on('deviceready', onReady);
- else
+  else
      angular.element(document).ready(onReady);
 
 
- angular.module('simple-todos').controller('TodosListCtrl', ['$scope','$meteor',
+  angular.module('simple-todos').controller('TodosListCtrl', ['$scope','$meteor',
     function ($scope, $meteor) {
 
-      // Subscribe to tah tasks
+    // Initialize data for the form
+      $scope.newTask='';
+      $scope.taskImportant=false;
+      $scope.taskUrgent=false;
+
+    // Subscribe to the tasks
       $scope.$meteorSubscribe('tasks');
 
       $scope.tasks = $meteor.collection(function(){
         return Tasks.find($scope.getReactively('query'), {sort:{createdAt:-1}})
       }); 
       
-               // Angular UI Bootstrap
-                $scope.checkModel = {
-                  left: false,
-                  middle: true,
-                  right: false
-                };
 
-                $scope.checkResults = [];
-
-                $scope.$watchCollection('checkModel', function () {
-                  $scope.checkResults = [];
-                  angular.forEach($scope.checkModel, function (value, key) {
-                    if (value) {
-                      $scope.checkResults.push(key);
-                    }
-                  });
-                });
-      // initialize data for the form
-      $scope.newTask='';
-      $scope.taskImportant=false;
-
-      $scope.addTask = function (newTask, taskImportant){
-        $meteor.call('addTask', newTask, taskImportant); 
+      $scope.addTask = function (newTask, taskImportant, taskUrgent){
+        $meteor.call('addTask', newTask, taskImportant, taskUrgent); 
       };
 
       $scope.deleteTask = function (task) {
@@ -73,7 +59,7 @@ if (Meteor.isClient) {
         return Tasks.find ({checked: {$ne:true} }).count();
       };
       
-      // Subscribe to all Users
+    // Subscribe to all Users
       $scope.$meteorSubscribe('grittrAllUsers');
       $scope.grittrAllUsers = $meteor.collection(function(){
         return Meteor.users.find();
@@ -83,7 +69,7 @@ if (Meteor.isClient) {
 }
 
 Meteor.methods ({
-  addTask: function (text, important) {
+  addTask: function (text, important, urgent) {
     // Make sure the user is looged in before inserting a task  
     if (!Meteor.userId()){
       throw new Meteor.Error('non-authorized');
@@ -91,10 +77,13 @@ Meteor.methods ({
     // Check input data, might want to get the check outside of this function
     if (!important)
       important = false;
+    if (!urgent)
+      urgent = false;
 
     Tasks.insert({
       text:text,
       important:important,
+      urgent:urgent,
       createdAt:new Date(),
       owner: Meteor.userId(),
       private:true
