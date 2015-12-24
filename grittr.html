@@ -20,8 +20,7 @@
                             newTask=''; taskImportant=false; taskUrgent=false;"> 
          <div class="input-group btn-group" >
 
-            <input type="text" class="form-control" placeholder="new task" 
-                ng-model="newTask"/>
+            <input type="text" class="form-control" ng-class="{'important':taskImportant, 'urgent':taskUrgent}" placeholder="new task" ng-model="newTask"/>
                <span class="input-group-btn">
                   <label class="btn btn-default" ng-model="taskUrgent" 
                           btn-checkbox><span class="glyphicon glyphicon-fire"></span></label>
@@ -39,11 +38,11 @@
     <div class="row">
       <div class="col-md-12">
         <ul ng-repeat="task in tasks">
-          <li ng-class="{'checked':task.checked, 'private':task.private}">
+          <li ng-class="{'checked':task.checked, 'private':task.private, 'important':task.important, 'urgent':task.urgent}">
             <button class="delete" ng-click="deleteTask(task)">&times;</button>
             <input type="checkbox" ng-checked="task.checked"
                    ng-click="setChecked(task)" class="toggle-cheched" />
-            <span class="text" ng-class="{'important':task.important, 'urgent':task.urgent}">{{task.text}} </span>
+            <span class="text" >{{task.text}} </span>
           </li> 
         </ul>
       </div> <!-- /col-md-12-->

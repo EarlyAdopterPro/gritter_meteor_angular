@@ -2,33 +2,35 @@ Tasks = new Mongo.Collection('tasks');
 
 if (Meteor.isClient) {
 
- // This code only runs on the client
- angular.module('simple-todos',['angular-meteor','accounts.ui','ui.bootstrap']);
+  // This code only runs on the client
+  angular.module('simple-todos',['angular-meteor','accounts.ui','ui.bootstrap']);
 
   function onReady() {
       angular.bootstrap(document, ['simple-todos']);
   }
-         
- if (Meteor.isCordova)
+
+  // this is required for mobile app compilation
+  if (Meteor.isCordova)
      angular.element(document).on('deviceready', onReady);
- else
+  else
      angular.element(document).ready(onReady);
 
 
- angular.module('simple-todos').controller('TodosListCtrl', ['$scope','$meteor',
+  angular.module('simple-todos').controller('TodosListCtrl', ['$scope','$meteor',
     function ($scope, $meteor) {
 
-      // Subscribe to the tasks
+    // Initialize data for the form
+      $scope.newTask='';
+      $scope.taskImportant=false;
+      $scope.taskUrgent=false;
+
+    // Subscribe to the tasks
       $scope.$meteorSubscribe('tasks');
 
       $scope.tasks = $meteor.collection(function(){
         return Tasks.find($scope.getReactively('query'), {sort:{createdAt:-1}})
       }); 
       
-      // initialize data for the form
-      $scope.newTask='';
-      $scope.taskImportant=false;
-      $scope.taskUrgent=false;
 
       $scope.addTask = function (newTask, taskImportant, taskUrgent){
         $meteor.call('addTask', newTask, taskImportant, taskUrgent); 
@@ -57,7 +59,7 @@ if (Meteor.isClient) {
         return Tasks.find ({checked: {$ne:true} }).count();
       };
       
-      // Subscribe to all Users
+    // Subscribe to all Users
       $scope.$meteorSubscribe('grittrAllUsers');
       $scope.grittrAllUsers = $meteor.collection(function(){
         return Meteor.users.find();
