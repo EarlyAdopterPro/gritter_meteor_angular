@@ -3,8 +3,7 @@ Tasks = new Mongo.Collection('tasks');
 if (Meteor.isClient) {
 
  // This code only runs on the client
- angular.module('simple-todos',['angular-meteor']);
-
+ angular.module('simple-todos',['angular-meteor','accounts.ui','ui.bootstrap']);
 
   function onReady() {
       angular.bootstrap(document, ['simple-todos']);
@@ -26,6 +25,27 @@ if (Meteor.isClient) {
         return Tasks.find($scope.getReactively('query'), {sort:{createdAt:-1}})
       }); 
       
+               // Angular UI Bootstrap
+                $scope.checkModel = {
+                  left: false,
+                  middle: true,
+                  right: false
+                };
+
+                $scope.checkResults = [];
+
+                $scope.$watchCollection('checkModel', function () {
+                  $scope.checkResults = [];
+                  angular.forEach($scope.checkModel, function (value, key) {
+                    if (value) {
+                      $scope.checkResults.push(key);
+                    }
+                  });
+                });
+      // initialize data for the form
+      $scope.newTask='';
+      $scope.taskImportant=false;
+
       $scope.addTask = function (newTask, taskImportant){
         $meteor.call('addTask', newTask, taskImportant); 
       };
@@ -68,6 +88,9 @@ Meteor.methods ({
     if (!Meteor.userId()){
       throw new Meteor.Error('non-authorized');
     }
+    // Check input data, might want to get the check outside of this function
+    if (!important)
+      important = false;
 
     Tasks.insert({
       text:text,
@@ -75,7 +98,6 @@ Meteor.methods ({
       createdAt:new Date(),
       owner: Meteor.userId(),
       private:true
-
     });
   },
 

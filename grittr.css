@@ -1,13 +1,5 @@
 /* CSS declarations go here */
 
-@media (max-width: @screen-xs) {
-    body{font-size: 24px;}
-}
-
-@media (max-width: @screen-sm) {
-    body{font-size: 14px;}
-}
-
 .grittr-container {
   padding-top:10px;  
   width: 100%;
@@ -74,4 +66,12 @@ li.private {
 
 .important{
   font-weight:bold;
+}
+
+@media (max-width: @screen-xs) {
+    body{font-size: 24px;}
+}
+
+@media (max-width: @screen-sm) {
+    body{font-size: 14px;}
 }

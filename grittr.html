@@ -1,9 +1,52 @@
 <head>
-  <title>Grittr - smart to do list</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Grittr - smart to do list</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
 </head>
-<body>
-  <div ng-controller="TodosListCtrl" ng-include="'todos-list.ng.html'">
-  </div>
+
+<body> 
+  <div ng-controller="TodosListCtrl" class="grittr-container container">
+    <div class="row">
+      <div class="col-md-6">
+        <h1> NEW Grittr list ({{incompleteCount()}}) </h1>
+      </div>
+      <div class="col-md-6">
+  <login-buttons></login-buttons>
+      </div>
+     </div> <!--/row-->
+     <div class="row">
+       <div class="col-md-12">
+         <!-- TODO: resolve duplication of addTask function call, see button -->
+         <form ng-submit="addTask(newTask, taskImportant);
+                            newTask=''; taskImportant=false;"> 
+         <div class="input-group btn-group" >
+
+            <input type="text" class="form-control" placeholder="new task" 
+                ng-model="newTask"/>
+               <span class="input-group-btn">
+                  <label class="btn btn-default" ng-model="taskUrgent" 
+                          btn-checkbox><span class="glyphicon glyphicon-fire"></span></label>
+                  <label class="btn btn-default" ng-model="taskImportant" 
+                          btn-checkbox><span class="glyphicon glyphicon-alert"></span></label>
+                  <button class="btn btn-default" type="submit"> 
+                    <span class="glyphicon glyphicon-plus"></span> 
+                </button>
+               </span> <!-- /input-group-btn -->
+         </div><!-- /input-group -->
+         </form>
+       </div><!-- /col-md-12 -->
+
+     </div><!-- /row -->
+    <div class="row">
+      <div class="col-md-12">
+        <ul ng-repeat="task in tasks">
+          <li ng-class="{'checked':task.checked, 'private':task.private}">
+            <button class="delete" ng-click="deleteTask(task)">&times;</button>
+            <input type="checkbox" ng-checked="task.checked"
+                   ng-click="setChecked(task)" class="toggle-cheched" />
+            <span class="text" ng-class="{'important':task.important}">{{task.text}} </span>
+          </li> 
+        </ul>
+      </div> <!-- /col-md-12-->
+    </div> <!-- /row -->
+  </div> <!-- /.container --> 
 </body>
