@@ -19,3 +19,4 @@ accounts-password
 dotansimha:accounts-ui-angular
 twbs:bootstrap
 enforcer:angular-ui-bootstrap
+angularui:angular-ui-router

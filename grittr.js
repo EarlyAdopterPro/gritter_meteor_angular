@@ -3,70 +3,93 @@ Tasks = new Mongo.Collection('tasks');
 if (Meteor.isClient) {
 
   // This code only runs on the client
-  angular.module('simple-todos',['angular-meteor','accounts.ui','ui.bootstrap']);
+  angular.module('simple-todos',['angular-meteor','accounts.ui','ui.bootstrap','ui.router']);
 
   function onReady() {
       angular.bootstrap(document, ['simple-todos']);
   }
 
-  // this is required for mobile app compilation
+  // This is required for mobile app compilation
   if (Meteor.isCordova)
      angular.element(document).on('deviceready', onReady);
   else
      angular.element(document).ready(onReady);
 
+  // ROUTER
+  angular.module('simple-todos').config(function ($urlRouterProvider, $stateProvider, $locationProvider) {
+      $locationProvider.html5Mode(true);
+   
+      $stateProvider
+        .state('list', {
+          url: '/list',
+          templateUrl: 'grittr-list.html',
+          controller: 'TodosListCtrl'
+        })
+        .state('share', {
+          url: '/share/:taskId',
+          templateUrl: 'grittr-share.html',
+          controller: 'ShareCtrl'
+       });
+   
+      $urlRouterProvider.otherwise("/list");
+    });
 
-  angular.module('simple-todos').controller('TodosListCtrl', ['$scope','$meteor',
-    function ($scope, $meteor) {
 
-    // Initialize data for the form
-      $scope.newTask='';
-      $scope.taskImportant = false;
-      $scope.taskUrgent = false;
-      $scope.show = false;
+  // CONTROLLERS
+  angular.module('simple-todos')
+    .controller('TodosListCtrl', ['$scope','$meteor',
+      function ($scope, $meteor) {
 
-    // Subscribe to the tasks
-      $scope.$meteorSubscribe('tasks');
+      // Initialize data for the form
+        $scope.newTask='';
+        $scope.taskImportant = false;
+        $scope.taskUrgent = false;
+        $scope.show = false;
 
-      $scope.tasks = $meteor.collection(function(){
+      // Subscribe to the tasks
+        $scope.$meteorSubscribe('tasks');
+        $scope.tasks = $meteor.collection(function(){
         return Tasks.find($scope.getReactively('query'), {sort:{createdAt:-1}})
-      }); 
-      
+        }); 
 
-      $scope.addTask = function (newTask, taskImportant, taskUrgent){
-        $meteor.call('addTask', newTask, taskImportant, taskUrgent); 
-      };
+        $scope.addTask = function (newTask, taskImportant, taskUrgent){
+          $meteor.call('addTask', newTask, taskImportant, taskUrgent); 
+        };
 
-      $scope.deleteTask = function (task) {
-        $meteor.call('deleteTask', task._id);
-      }
+        $scope.deleteTask = function (task) {
+          $meteor.call('deleteTask', task._id);
+        }
 
-      $scope.setChecked = function (task) {
-        $meteor.call('setChecked', task._id, !task.checked); 
-      }
+        $scope.setChecked = function (task) {
+          $meteor.call('setChecked', task._id, !task.checked); 
+        }
 
-      $scope.setPrivate = function (task) {
-        $meteor.call('setPrivate', task._id, !task.private);
-      };
+        $scope.setPrivate = function (task) {
+          $meteor.call('setPrivate', task._id, !task.private);
+        };
 
-      $scope.$watch('hideCompleted', function(){
-        if ($scope.hideCompleted)
-          $scope.query = {checked: {$ne: true}};
-        else
-          $scope.query = {};
-      });
-      
-      $scope.incompleteCount = function () {
-        return Tasks.find ({checked: {$ne:true} }).count();
-      };
-      
-    // Subscribe to all Users
-      $scope.$meteorSubscribe('grittrAllUsers');
-      $scope.grittrAllUsers = $meteor.collection(function(){
-        return Meteor.users.find();
-      });
-
-    }]);
+        $scope.$watch('hideCompleted', function(){
+          if ($scope.hideCompleted)
+            $scope.query = {checked: {$ne: true}};
+          else
+            $scope.query = {};
+        });
+        
+        $scope.incompleteCount = function () {
+          return Tasks.find ({checked: {$ne:true} }).count();
+        };
+        
+      // Subscribe to all Users
+        $scope.$meteorSubscribe('grittrAllUsers');
+        $scope.grittrAllUsers = $meteor.collection(function(){
+          return Meteor.users.find();
+        });
+      }])
+    .controller('ShareCtrl', ['$scope','$meteor', '$stateParams',
+      function ($scope, $meteor, $stateParams) {
+        $scope.test ="SHARE CTRL WORK";
+        $scope.taskId = $stateParams.taskId;
+      }]); // END OF CONTROLLERS
 }
 
 Meteor.methods ({
