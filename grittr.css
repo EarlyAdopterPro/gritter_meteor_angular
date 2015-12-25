@@ -49,7 +49,6 @@ h1 {
 .grittr-checkbox {
   width: 10px;
   padding-left: 0px;
-  padding-right: 5px;
   padding-top: 15px;
   padding-bottom: 15px;
 }
@@ -73,6 +72,7 @@ h1 {
   padding-right: 0px;
   padding-top: 15px;
   padding-bottom: 15px;
+  width: calc(100% - 30px);
 }
 .checked .text {
   text-decoration: line-through;
@@ -88,11 +88,16 @@ h1 {
 
 .rolldown {
   background: #f6f6f6;
-  padding-right:5px;
-  padding-left:10px;
+  padding: 15px;
+  padding-left:0px;
   border:0;
 }
 
+.shadow {
+  box-shadow: 3px 3px 5px #888888;
+  position: relative;
+  z-index: 10;
+}
 @media (max-width: @screen-xs) {
     body{font-size: 14px;}
 }

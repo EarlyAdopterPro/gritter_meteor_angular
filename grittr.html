@@ -42,7 +42,8 @@
        <div class ="col-xs-12">
          <div class="row grittr-li" 
           ng-class="{'checked':task.checked, 'private':task.private, 
-                     'important':task.important, 'urgent':task.urgent}">
+                     'important':task.important, 'urgent':task.urgent,
+                     'shadow':show}">
            <div class="col-xs-1 grittr-checkbox">
               <input type="checkbox" ng-checked="task.checked"
                      ng-click="setChecked(task); show=show" />
@@ -53,8 +54,10 @@
            </div> <!-- /.gritt-li .col-md-11 -->
          </div> <!-- /.gritt-ul .row-->
          <div class="row rolldown" ng-show="show">
-            <div class="col-xs-12" >
-              test
+            <div class="col-xs-12">
+              <button type="button" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share
+                </button>
             </div>
          </div> <!-- /.row .rolldown -->
        </div> <!-- /.col-xs-12 -->
