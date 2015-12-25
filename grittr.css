@@ -88,9 +88,14 @@ h1 {
 
 .rolldown {
   background: #f6f6f6;
-  padding: 15px;
-  padding-left:0px;
-  border:0;
+  padding: 0;
+}
+.submenu {
+  background: #ddd;
+  padding: 10px;
+  border-left: 1px solid #939393;
+  text-align: center;
+  font-size: 1.1em;
 }
 
 .shadow {
