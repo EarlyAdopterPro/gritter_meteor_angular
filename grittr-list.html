@@ -60,12 +60,19 @@
             <span 
               class="glyphicon glyphicon-user label label-default grittr-label"
               ng-show="task.owner != $root.currentUser._id"> <b>BY</b>: {{getUserById(task.owner).emails[0].address}}</span> 
+              <!-- TODO : need to iterate on useres with whom this was shared-->
              <span 
               class="glyphicon glyphicon-user grittr-label"
-              ng-show="task.owner == $root.currentUser._id && task.sharedWith"> shared <b>WITH</b>: <br> {{getUserById(task.sharedWith[0]).emails[0].address}}</span> 
+              ng-show="task.owner == $root.currentUser._id && task.sharedWith"> 
+                shared <b>WITH</b>: 
+                  <br> 
+                    <span ng-repeat="userId in task.sharedWith">
+                     {{getUserById(userId).emails[0].address}}<br>
+                    </span> 
+             </span>
          </div>
           <div class="col-xs-6 submenu">
-              <span class="glyphicon glyphicon-share grittr-label"> <a href="/share/{{task._id}}">Share</a></span>
+              <span ng-show="task.owner == $root.currentUser._id" class="glyphicon glyphicon-share grittr-label"> <a href="/share/{{task._id}}">Share</a></span>
           </div>
        </div> <!-- /.row .rolldown -->
      </div> <!-- /.col-xs-12 -->
