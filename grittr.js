@@ -1,15 +1,15 @@
 Tasks = new Mongo.Collection('tasks');
 
 if (Meteor.isClient) {
-
   // This code only runs on the client
+
+  // Declare Angular module (aka app);
   angular.module('simple-todos',['angular-meteor','accounts.ui','ui.bootstrap','ui.router']);
 
+  // This is required for mobile app compilation
   function onReady() {
       angular.bootstrap(document, ['simple-todos']);
   }
-
-  // This is required for mobile app compilation
   if (Meteor.isCordova)
      angular.element(document).on('deviceready', onReady);
   else
@@ -81,16 +81,76 @@ if (Meteor.isClient) {
         
       // Subscribe to all Users
         $scope.$meteorSubscribe('grittrAllUsers');
-        $scope.grittrAllUsers = $meteor.collection(function(){
-          return Meteor.users.find();
-        });
+
+      // TODO: move this to Angular directive, since it is used in 2 places
+        $scope.getUserById = function(userId){
+          return Meteor.users.findOne({_id:userId});
+        }; 
       }])
-    .controller('ShareCtrl', ['$scope','$meteor', '$stateParams',
-      function ($scope, $meteor, $stateParams) {
-        $scope.test ="SHARE CTRL WORK";
-        $scope.taskId = $stateParams.taskId;
-      }]); // END OF CONTROLLERS
-}
+    .controller('ShareCtrl', ['$scope','$meteor','$stateParams','$reactive',
+      function ($scope, $meteor, $stateParams, $reactive) {
+
+      let reactiveContext = $reactive(this).attach($scope);
+
+      // Task Id passed via URL of router
+        $scope.taskIdfromUrl = $stateParams.taskId;
+
+      // Subscribe to the tasks
+        $scope.$meteorSubscribe('tasks');
+
+        $scope.taskToShare = function(){
+          return Tasks.findOne({_id:$stateParams.taskId});
+        }; 
+
+      // Subscribe to all Users
+        $scope.$meteorSubscribe('grittrAllUsers');
+
+      // TODO: move this to Angular directive, since it is used in 2 places
+        $scope.getUserById = function(userId){
+          return Meteor.users.findOne({_id:userId});
+        }; 
+
+        reactiveContext.helpers({
+        mytask: function() {
+            return Tasks.findOne($stateParams.taskId);
+           }
+        });
+        
+        console.log(this.mytask);
+      // Get list of user with who owner can share the task
+        var sharedWithArray = [];
+
+        console.log(this.mytask.sharedWith);
+
+        if (this.mytask.sharedWith == null) {
+          console.log ("UNDEFINDE ARRAY HERY");
+          console.log(sharedWithArray);
+        } else 
+        {
+          var sharedWithArray = this.mytask.sharedWith;
+        }
+
+        console.log(sharedWithArray);
+
+        $scope.grittrAllUsers = $meteor.collection(function(){
+          return Meteor.users.find({ $and: [{ _id: {$ne:Meteor.userId()}},{_id:{$nin:sharedWithArray}}] });
+        });
+
+
+      // Share this task with otherUser
+        $scope.shareWith = function (task, otherUser) {
+          shared = $meteor.call('shareWith', task._id, otherUser._id);
+          if (shared) {
+            $scope.notification = "Shared with " + otherUser.emails[0].address;
+            sharedWithArray.push(task._id);
+            console.log(sharedWithArray);
+          }
+        }
+
+    }]);// END OF CONTROLLERS
+} // END OF METEOR IS CLIENT
+
+// METHODS
 
 Meteor.methods ({
   addTask: function (text, important, urgent) {
@@ -131,8 +191,21 @@ Meteor.methods ({
     }
 
     Tasks.update(taskId, {$set: {private: setToPrivate } });
+  },
+  
+  shareWith: function (taskId, userId) {
+    if (!Meteor.userId()){
+      throw new Meteor.Error('non-authorized');
+    } else if (Meteor.userId() == userId) {
+      throw new Meteor.Error("shared-with-itself", 
+      "User cannot share the task with oneself");
+    }
+    // Add users to the Shared with array
+    Tasks.update(taskId, {$addToSet: {sharedWith: userId }});
+    return true;
+
   }
-});
+}); // END OF METHODS
 
 if (Meteor.isServer) {
   Meteor.publish('tasks', function (){
@@ -140,7 +213,8 @@ if (Meteor.isServer) {
       {
         $or: [
           { private: {$ne: true} },
-          { owner: this.userId}
+          { owner: this.userId},
+          { sharedWith:this.userId }
         ]
       });
   });
@@ -150,6 +224,3 @@ if (Meteor.isServer) {
     return Meteor.users.find(); 
   });
 }
-
-
-
