@@ -1,4 +1,19 @@
-Share with: 
-{{test}}
-{{taskId}}
-Get list of users.
+<div class="grittr-container container">
+  <div class="row grittr-row">
+    <div class="col-xs-6">
+      <a href="/">Done</a>
+    </div>
+    <div class="col-xs-6">
+    </div>
+  </div> <!-- / .row -->
+  <div class="row grittr-shared" ng-repeat="sharedUser in taskToShare().sharedWith">
+    <div class="col-sx-12 text alert-success">
+    <span class="glyphicon glyphicon-ok"> {{getUserById(sharedUser).emails[0].address}} </span>
+    </div> <!-- / .col-xs-12 -->
+  </div> <!-- / .row .grittr-li -->
+  <div class="row grittr-li" ng-repeat="user in grittrAllUsers | filter:filterAlreadyShared">
+    <div class="col-sx-12 text" ng-click="shareWith(taskToShare(), user)">
+    <span class="glyphicon glyphicon-share"> {{user.emails[0].address}}</span>
+    </div> <!-- / .col-xs-12 -->
+  </div> <!-- / .row .grittr-li -->
+</div> <!-- /.grittr-contatiner container -->

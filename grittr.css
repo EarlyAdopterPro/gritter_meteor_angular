@@ -18,10 +18,17 @@ h1 {
   display: block;
   margin-bottom: 5px;
   margin-top: 10px;
+  vertical-align: middle;
 }
 
 /* Grittr classes */
 
+.grittr-label {
+   font-weight: normal;
+   margin: 5px;
+   margin-right:10px;
+   font-family: 'Glyphicons Halflings', "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 .grittr-container {
   padding-top:10px;  
   width: 100%;
@@ -46,6 +53,13 @@ h1 {
 
 }
 
+.grittr-shared {
+  padding-left: 10px;
+  padding-right: 0px;
+  border-top: #d6e9c6 solid 1px;
+  border-left: #aed48f solid 3px;
+  background: #dff0d8;
+}
 .grittr-li {
   padding-left: 10px;
   padding-right: 0px;
@@ -73,6 +87,7 @@ h1 {
 
 .checked {
   color: #888;
+  text-decoration: line-through;
 }
 
 .text {
@@ -82,7 +97,7 @@ h1 {
   padding-bottom: 15px;
   width: calc(100% - 30px);
 }
-.checked .text {
+.checked .crossed{
   text-decoration: line-through;
 }
 
@@ -104,6 +119,7 @@ h1 {
   border-left: 1px solid #939393;
   text-align: center;
   font-size: 1.1em;
+  height:50px;
 }
 
 .shadow {
