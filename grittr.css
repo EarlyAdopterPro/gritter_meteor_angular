@@ -95,7 +95,6 @@ h1 {
   padding-right: 0px;
   padding-top: 15px;
   padding-bottom: 15px;
-  width: calc(100% - 30px);
 }
 .checked .crossed{
   text-decoration: line-through;
@@ -110,16 +109,14 @@ h1 {
 }
 
 .rolldown {
-  background: #f6f6f6;
+  background: #ddd;
   padding: 0;
 }
 .submenu {
   background: #ddd;
   padding: 10px;
-  border-left: 1px solid #939393;
   text-align: center;
   font-size: 1.1em;
-  height:50px;
 }
 
 .shadow {

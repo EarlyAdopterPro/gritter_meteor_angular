@@ -37,8 +37,8 @@ if (Meteor.isClient) {
 
   // CONTROLLERS
   angular.module('simple-todos')
-    .controller('TodosListCtrl', ['$scope','$meteor',
-      function ($scope, $meteor) {
+    .controller('TodosListCtrl', ['$scope','$meteor','$location',
+      function ($scope, $meteor, $location) {
 
       // Initialize data for the form
         $scope.newTask='';
@@ -86,6 +86,10 @@ if (Meteor.isClient) {
         $scope.getUserById = function(userId){
           return Meteor.users.findOne({_id:userId});
         }; 
+      // Use go function as a href for buttons
+        $scope.go = function ( path, taskId ) {
+            $location.path( path+taskId );
+          };
       }])
     .controller('ShareCtrl', ['$scope','$meteor','$stateParams','$reactive',
       function ($scope, $meteor, $stateParams, $reactive) {
@@ -116,21 +120,21 @@ if (Meteor.isClient) {
            }
         });
         
-        console.log(this.mytask);
+        //console.log(this.mytask);
       // Get list of user with who owner can share the task
         var sharedWithArray = [];
 
-        console.log(this.mytask.sharedWith);
+        //console.log(this.mytask.sharedWith);
 
         if (this.mytask.sharedWith == null) {
-          console.log ("UNDEFINDE ARRAY HERY");
-          console.log(sharedWithArray);
+          //console.log ("UNDEFINDE ARRAY HERY");
+          //console.log(sharedWithArray);
         } else 
         {
           var sharedWithArray = this.mytask.sharedWith;
         }
 
-        console.log(sharedWithArray);
+        //console.log(sharedWithArray);
 
         $scope.grittrAllUsers = $meteor.collection(function(){
           return Meteor.users.find({ $and: [{ _id: {$ne:Meteor.userId()}},{_id:{$nin:sharedWithArray}}] });
@@ -143,7 +147,7 @@ if (Meteor.isClient) {
           if (shared) {
             $scope.notification = "Shared with " + otherUser.emails[0].address;
             sharedWithArray.push(task._id);
-            console.log(sharedWithArray);
+            //console.log(sharedWithArray);
           }
         }
 
