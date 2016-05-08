@@ -16,7 +16,8 @@ if (Meteor.isClient) {
      angular.element(document).ready(onReady);
 
   // ROUTER
-  angular.module('simple-todos').config(function ($urlRouterProvider, $stateProvider, $locationProvider) {
+  angular.module('simple-todos').config(
+    function ($urlRouterProvider, $stateProvider, $locationProvider) {
       $locationProvider.html5Mode(true);
    
       $stateProvider
@@ -49,7 +50,7 @@ if (Meteor.isClient) {
       // Subscribe to the tasks
         $scope.$meteorSubscribe('tasks');
         $scope.tasks = $meteor.collection(function(){
-        return Tasks.find($scope.getReactively('query'), {sort:{createdAt:-1}})
+         return Tasks.find($scope.getReactively('query'), {sort:{createdAt:-1}})
         }); 
 
         $scope.addTask = function (newTask, taskImportant, taskUrgent){
@@ -85,12 +86,25 @@ if (Meteor.isClient) {
       // TODO: move this to Angular directive, since it is used in 2 places
         $scope.getUserById = function(userId){
           return Meteor.users.findOne({_id:userId});
-        }; 
+        };
+
+
+      // If user is logged in return true, else retuen false
+        $scope.loggedInUser = function (){
+          if (Meteor.userId())
+            return true;
+          else
+            return false;
+        };
+        
+
       // Use go function as a href for buttons
         $scope.go = function ( path, taskId ) {
             $location.path( path+taskId );
           };
       }])
+
+    // ===== SHARE CONTROLLER =====
     .controller('ShareCtrl', ['$scope','$meteor','$stateParams','$reactive',
       function ($scope, $meteor, $stateParams, $reactive) {
 
